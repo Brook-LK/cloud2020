@@ -3,6 +3,7 @@ package com.lucky.springcloud.controller;
 import com.lucky.springcloud.entity.CommonResult;
 import com.lucky.springcloud.entity.Payment;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +18,15 @@ import javax.annotation.Resource;
 @RequestMapping("/consumer")
 public class OrderController {
 
-//    public static final String PAYMENT_URL = "http://localhost:8001/payment";
-    public static final String PAYMENT_URL = "http://CLOUD-PAYMENT-SERVICE" + "/payment/";
+    public static final String PAYMENT_URL = "http://localhost:8001/payment";
+    //public static final String PAYMENT_URL = "http://CLOUD-PAYMENT-SERVICE" + "/payment";
     //CLOUD-PAYMENT-SERVICE相当于localhost:8001
 
     @Resource
     private RestTemplate restTemplate;
+
+    @Value("${server.port}")
+    private String serverPort;
 
     @GetMapping("/payment/add")
     public CommonResult<Payment> add(Payment payment){
@@ -48,5 +52,16 @@ public class OrderController {
     @GetMapping(value = "payment/lb")
     public String getServerPort(){
         return restTemplate.getForObject(PAYMENT_URL + "/lb", String.class);
+    }
+
+    @GetMapping(value = "/payment/zipkin")
+    public String paymentZipkin(){
+        String result = restTemplate.getForObject(PAYMENT_URL + "/zipkin",String.class);
+        return result;
+    }
+
+    @GetMapping(value = "/serverPort")
+    public String getPort(){
+        return serverPort;
     }
 }

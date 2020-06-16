@@ -9,12 +9,25 @@ spring:
       server:
         git:
           #uri: https://github.com/Brook-LK/springcloud-config.git
-          uri: D:/IdeaProjects/cloud2020/springcloud-config
+          uri: D:/IdeaProjects/cloud2020/springcloud-config #github访问过慢，可以用本地github仓库
           search-paths:
             - springcloud-config
       label: master
+  #RabbitMQ相关配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 eureka:
   client:
     service-url:
       defaultZone: http://eureka7001.com:7001/eureka/
+
+#RabbitMQ相关配置，暴露bus刷新配置的d端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'bus-refresh'
